@@ -1,5 +1,5 @@
 //
-//  Pin+CoreDataClass.swift
+//  CollectionImage+CoreDataClass.swift
 //  ios-virtual-tourist
 //
 //  Created by Randall Tom on 11/16/17.
@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Pin)
-public class Pin: NSManagedObject {
+@objc(CollectionImage)
+public class CollectionImage: NSManagedObject {
 
 }

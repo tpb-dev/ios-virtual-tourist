@@ -2,7 +2,7 @@
 //  Pin+CoreDataProperties.swift
 //  ios-virtual-tourist
 //
-//  Created by Randall Tom on 11/15/17.
+//  Created by Randall Tom on 11/16/17.
 //  Copyright © 2017 tpb-dev. All rights reserved.
 //
 //
@@ -19,5 +19,6 @@ extension Pin {
 
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
+    @NSManaged public var imgs: CollectionImage?
 
 }
