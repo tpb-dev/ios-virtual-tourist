@@ -8,7 +8,14 @@
 
 import Foundation
 import UIKit
+import MapKit
 
 class EditViewController: UIViewController {
     
+    @IBOutlet weak var editViewMapView: MKMapView!
+
+    @IBAction func newCollectionClicked(_ sender: Any) {
+    }
+    @IBAction func backClicked(_ sender: Any) {
+    }
 }
