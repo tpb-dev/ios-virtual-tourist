@@ -69,7 +69,6 @@
 				679D57361FBE6A870078F48D /* Controllers */,
 				67BDB9591FBD4B2000C53D9E /* Models */,
 				677A92931FBD3C2300D4D48B /* AppDelegate.swift */,
-				677A92951FBD3C2300D4D48B /* MapViewController.swift */,
 				677A92971FBD3C2300D4D48B /* Main.storyboard */,
 				677A929D1FBD3C2300D4D48B /* Assets.xcassets */,
 				677A929F1FBD3C2300D4D48B /* LaunchScreen.storyboard */,
@@ -83,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				679D57371FBE6A9D0078F48D /* EditViewController.swift */,
+				677A92951FBD3C2300D4D48B /* MapViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
