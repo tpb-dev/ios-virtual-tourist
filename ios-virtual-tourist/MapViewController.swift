@@ -6,6 +6,8 @@
 //  Copyright © 2017 tpb-dev. All rights reserved.
 //
 
+//https://code.tutsplus.com/tutorials/core-data-and-swift-relationships-and-more-fetching--cms-25070
+
 import UIKit
 import MapKit
 
