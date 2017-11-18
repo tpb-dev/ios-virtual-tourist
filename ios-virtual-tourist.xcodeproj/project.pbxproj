@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D5444211FBFAD3F00C9B13A /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5444201FBFAD3F00C9B13A /* MapController.swift */; };
 		677A92941FBD3C2300D4D48B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677A92931FBD3C2300D4D48B /* AppDelegate.swift */; };
 		677A92961FBD3C2300D4D48B /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677A92951FBD3C2300D4D48B /* MapViewController.swift */; };
 		677A92991FBD3C2300D4D48B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 677A92971FBD3C2300D4D48B /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D5444201FBFAD3F00C9B13A /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		677A92901FBD3C2300D4D48B /* ios-virtual-tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-virtual-tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		677A92931FBD3C2300D4D48B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		677A92951FBD3C2300D4D48B /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -49,6 +51,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4D54441F1FBFAD1D00C9B13A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4D5444201FBFAD3F00C9B13A /* MapController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		677A92871FBD3C2300D4D48B = {
 			isa = PBXGroup;
 			children = (
@@ -68,7 +78,8 @@
 		677A92921FBD3C2300D4D48B /* ios-virtual-tourist */ = {
 			isa = PBXGroup;
 			children = (
-				679D57361FBE6A870078F48D /* Controllers */,
+				4D54441F1FBFAD1D00C9B13A /* Controllers */,
+				679D57361FBE6A870078F48D /* Views */,
 				67BDB9591FBD4B2000C53D9E /* Models */,
 				677A92931FBD3C2300D4D48B /* AppDelegate.swift */,
 				677A92971FBD3C2300D4D48B /* Main.storyboard */,
@@ -80,13 +91,13 @@
 			path = "ios-virtual-tourist";
 			sourceTree = "<group>";
 		};
-		679D57361FBE6A870078F48D /* Controllers */ = {
+		679D57361FBE6A870078F48D /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				679D57371FBE6A9D0078F48D /* EditViewController.swift */,
 				677A92951FBD3C2300D4D48B /* MapViewController.swift */,
 			);
-			path = Controllers;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		67BDB9591FBD4B2000C53D9E /* Models */ = {
@@ -181,6 +192,7 @@
 				679D57341FBE5E420078F48D /* Pin+CoreDataClass.swift in Sources */,
 				67B2EDAB1FBF99F50042750F /* EditViewCell.swift in Sources */,
 				679D57331FBE5E420078F48D /* CollectionImage+CoreDataProperties.swift in Sources */,
+				4D5444211FBFAD3F00C9B13A /* MapController.swift in Sources */,
 				677A929C1FBD3C2300D4D48B /* ios_virtual_tourist.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

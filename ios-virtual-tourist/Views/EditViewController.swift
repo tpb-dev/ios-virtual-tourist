@@ -17,5 +17,6 @@ class EditViewController: UIViewController {
     @IBAction func newCollectionClicked(_ sender: Any) {
     }
     @IBAction func backClicked(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

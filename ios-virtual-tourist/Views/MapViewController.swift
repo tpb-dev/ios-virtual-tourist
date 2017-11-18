@@ -7,6 +7,7 @@
 //
 
 //https://code.tutsplus.com/tutorials/core-data-and-swift-relationships-and-more-fetching--cms-25070
+//https://stackoverflow.com/questions/30858360/adding-a-pin-annotation-to-a-map-view-on-a-long-press-in-swift
 
 import UIKit
 import MapKit
@@ -15,6 +16,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet var mapViewController: UIView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +47,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         print("Edit clicked")
     }
     /*
+     
+     let imageView = UIImageView(image: meme.memedImage)
+     imageView.contentMode = .scaleAspectFit
+     cell.backgroundView = imageView
+     
+     
+     
+     
     func addPinToMap(pins: PinModel) {
         
         let annotation = MKPointAnnotation()
@@ -70,8 +80,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
         return view
     }
+    @IBAction func handleGesture(_ sender: UILongPressGestureRecognizer) {
+        if sender.state != UIGestureRecognizerState.began { return }
+        let touchLocation = sender.location(in: mapView)
+        let locationCoordinate = mapView.convert(touchLocation, toCoordinateFrom: mapView)
+        print("Tapped at lat: \(locationCoordinate.latitude) long: \(locationCoordinate.longitude)")
+        MapController.instance.storePinInstance(longitude: locationCoordinate.longitude, latitude: locationCoordinate.latitude)
+    }
     
-    
+/*
+ let storyboard = self.storyboard
+ let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController")
+ 
+ self.present(editViewController!, animated: true, completion: nil)
+*/
     
 }
 
