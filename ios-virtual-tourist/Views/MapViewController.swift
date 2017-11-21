@@ -31,6 +31,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         print("Inside viewWillAppear for mapviewcontroller")
         mapView.isHidden = false
         //deleteButton.isHidden = true
+        let pins = MapController.instance.getAllPins()!
+        for pin in pins {
+            addPinToMap(pin: pin)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -52,17 +56,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
      imageView.contentMode = .scaleAspectFit
      cell.backgroundView = imageView
      
+     */
      
      
-     
-    func addPinToMap(pins: PinModel) {
+    func addPinToMap(pin: Pin) {
         
         let annotation = MKPointAnnotation()
-        let coordinates = CLLocationCoordinate2D(latitude: pins.latitude, longitude:pins.longitude)
+        let coordinates = CLLocationCoordinate2D(latitude: pin.value(forKey: "latitude") as! CLLocationDegrees, longitude:pin.value(forKey: "longitude") as! CLLocationDegrees)
         annotation.coordinate = coordinates
         
         mapView.addAnnotation(annotation)
-    } */
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let annotation = annotation as? MKPointAnnotation else { return nil }
@@ -85,15 +89,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let touchLocation = sender.location(in: mapView)
         let locationCoordinate = mapView.convert(touchLocation, toCoordinateFrom: mapView)
         print("Tapped at lat: \(locationCoordinate.latitude) long: \(locationCoordinate.longitude)")
-        MapController.instance.storePinInstance(longitude: locationCoordinate.longitude, latitude: locationCoordinate.latitude)
+        let pin = MapController.instance.storePinInstance(longitude: locationCoordinate.longitude, latitude: locationCoordinate.latitude)
+        addPinToMap(pin: pin!)
     }
-    
-/*
- let storyboard = self.storyboard
- let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController")
- 
- self.present(editViewController!, animated: true, completion: nil)
-*/
-    
 }
 

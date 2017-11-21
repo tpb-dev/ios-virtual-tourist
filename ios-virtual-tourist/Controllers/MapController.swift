@@ -14,11 +14,11 @@ class MapController {
     
     static let instance = MapController()
     
-    func storePinInstance(longitude: Double, latitude: Double) {
+    func storePinInstance(longitude: Double, latitude: Double) -> Pin? {
         
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
-                return
+                return nil
         }
         
         let managedContext =
@@ -28,7 +28,7 @@ class MapController {
             NSEntityDescription.entity(forEntityName: "Pin",
                                        in: managedContext)!
         
-        let pin = NSManagedObject(entity: entity,
+        let pin = Pin(entity: entity,
                                      insertInto: managedContext)
         
         pin.setValue(longitude, forKeyPath: "longitude")
@@ -41,5 +41,26 @@ class MapController {
             print("Could not save. \(error), \(error.userInfo)")
         }
         
+        return pin
+        
+    }
+    
+    func getAllPins() -> [Pin]? {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return nil
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        let pinsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        
+        do {
+            let fetchedPins = try managedContext.fetch(pinsFetch) as! [Pin]
+            return fetchedPins
+        } catch {
+            fatalError("Failed to fetch employees: \(error)")
+            return nil
+        }
     }
 }
