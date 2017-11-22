@@ -34,7 +34,10 @@ class EditViewController: UIViewController, MKMapViewDelegate {
         myLocationPointRect = MKMapRectMake((annotation?.coordinate.longitude)!, (annotation?.coordinate.latitude)!, 0, 0)
         editViewMapView.showAnnotations([annotation!], animated: true)
         
+        loadImages()
+        
     }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         
@@ -46,6 +49,19 @@ class EditViewController: UIViewController, MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    func loadImages() {
+        let editControllerClient = EditController()
+        print("Brucey2")
+        editControllerClient.getPicsForCoordinates(longitude: (annotation?.coordinate.longitude)!, latitude: (annotation?.coordinate.latitude)!) { (response, error) -> Void in
+            if error != nil {
+                print("No error")
+            } else {
+                print("Some error")
+                
+            }
+        }
+    }
+    
     
     @IBAction func newCollectionClicked(_ sender: Any) {
     }
@@ -55,8 +71,6 @@ class EditViewController: UIViewController, MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
     {
-        
-        print("Brucey2")
         
     }
 }
