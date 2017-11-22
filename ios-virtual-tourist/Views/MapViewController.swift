@@ -17,7 +17,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet var mapViewController: UIView!
     
+    @IBOutlet weak var editButton: UIBarButtonItem!
     var isEditState = false
+    
+    var button : UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,13 +52,27 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
     @IBAction func editClicked(_ sender: Any) {
-        print("Edit clicked")
-        let button = UIButton(frame: CGRect(x: 100, y: 100, width: 100, height: 50))
-        button.backgroundColor = .green
-        button.setTitle("Test Button", for: .normal)
-        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        
-        self.view.addSubview(button)
+        if isEditState == false {
+            print("Edit clicked")
+            let screenSize = UIScreen.main.bounds
+            let screenWidth = screenSize.width
+            let screenHeight = screenSize.height
+            if button == nil {
+                button = UIButton(frame: CGRect(x: 0, y: screenHeight - 44, width: screenWidth, height: 50))
+                button.backgroundColor = .green
+                button.setTitle("Tap pins to delete", for: .normal)
+                button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+            } else {
+                button.isHidden = false
+            }
+            editButton.title = "Done"
+            self.view.addSubview(button)
+            
+        } else {
+            button.isHidden = true
+             editButton.title = "Edit"
+        }
+        isEditState = !isEditState
     }
     
     @objc func buttonAction() {
@@ -99,9 +116,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
     {
+        
         print("Brucey")
-        MapController.instance.currentCoordinatesLongitude = (view.annotation?.coordinate.longitude)!
-        MapController.instance.currentCoordinatesLatitude = (view.annotation?.coordinate.latitude)!
+        if isEditState == true {
+            let annotation = view.annotation as? MKPointAnnotation
+            mapView.removeAnnotation(annotation!)
+            MapController.instance.deletePin(annotation: annotation!)
+        } else {
+            MapController.instance.thePin = view.annotation
+            let storyboard = self.storyboard
+            let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController")
+            
+            self.present(editViewController!, animated: true, completion: nil)
+            
+        }
     }
     
     @IBAction func handleGesture(_ sender: UILongPressGestureRecognizer) {

@@ -9,13 +9,19 @@
 import Foundation
 import CoreData
 import UIKit
+import MapKit
 
 class MapController {
     
     static let instance = MapController()
     
-    var currentCoordinatesLongitude : Double = 0.0
-    var currentCoordinatesLatitude : Double = 0.0
+    var thePin : MKAnnotation?
+    
+    init() {
+        thePin = nil
+    }
+    
+    
     
     func storePinInstance(longitude: Double, latitude: Double) -> Pin? {
         
@@ -64,6 +70,35 @@ class MapController {
         } catch {
             fatalError("Failed to fetch employees: \(error)")
             return nil
+        }
+    }
+    
+    func deletePin(annotation: MKAnnotation) -> Bool {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return false
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let pred = NSPredicate(format: "%K == %@ AND %K == %@", argumentArray:["longitude", annotation.coordinate.longitude, "latitude", annotation.coordinate.latitude])
+
+        let pinsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        pinsFetch.predicate = pred
+        
+        do {
+            if let result = try? managedContext.fetch(pinsFetch) {
+                for object in result {
+                    //print((object as! Pin).latitude)
+                    managedContext.delete(object as! NSManagedObject)
+                }
+            }
+            try managedContext.save()
+            return true
+        } catch {
+            fatalError("Failed to fetch employees: \(error)")
+            return false
         }
     }
 }
