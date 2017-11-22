@@ -17,6 +17,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet var mapViewController: UIView!
     
+    var isEditState = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +50,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBAction func editClicked(_ sender: Any) {
         print("Edit clicked")
+        let button = UIButton(frame: CGRect(x: 100, y: 100, width: 100, height: 50))
+        button.backgroundColor = .green
+        button.setTitle("Test Button", for: .normal)
+        button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        
+        self.view.addSubview(button)
     }
+    
+    @objc func buttonAction() {
+        print("the dog")
+    }
+    
     /*
      
      let imageView = UIImageView(image: meme.memedImage)
@@ -84,6 +96,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
         return view
     }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
+    {
+        print("Brucey")
+        MapController.instance.currentCoordinatesLongitude = (view.annotation?.coordinate.longitude)!
+        MapController.instance.currentCoordinatesLatitude = (view.annotation?.coordinate.latitude)!
+    }
+    
     @IBAction func handleGesture(_ sender: UILongPressGestureRecognizer) {
         if sender.state != UIGestureRecognizerState.began { return }
         let touchLocation = sender.location(in: mapView)

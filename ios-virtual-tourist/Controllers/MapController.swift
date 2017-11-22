@@ -14,6 +14,9 @@ class MapController {
     
     static let instance = MapController()
     
+    var currentCoordinatesLongitude : Double = 0.0
+    var currentCoordinatesLatitude : Double = 0.0
+    
     func storePinInstance(longitude: Double, latitude: Double) -> Pin? {
         
         guard let appDelegate =
