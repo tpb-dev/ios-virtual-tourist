@@ -52,13 +52,14 @@ class EditViewController: UIViewController, MKMapViewDelegate {
     func loadImages() {
         let editControllerClient = EditController()
         print("Brucey2")
-        editControllerClient.getPicsForCoordinates(longitude: (annotation?.coordinate.longitude)!, latitude: (annotation?.coordinate.latitude)!) { (response, error) -> Void in
-            if error != nil {
-                print("No error")
-            } else {
-                print("Some error")
-                
-            }
+        let long = (annotation?.coordinate.longitude)!
+        let lat = (annotation?.coordinate.latitude)!
+        let imgURLs = editControllerClient.getResultsForCoordinates(longitude: long, latitude: lat, page: 1)!
+        if imgURLs.count == 0 {
+            print("No gppd")
+        } else {
+            print("Not bad")
+            
         }
     }
     

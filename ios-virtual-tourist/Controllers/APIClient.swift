@@ -37,10 +37,9 @@ class APIClient {
         return request
     }
     
-    func sendRequest(request: NSMutableURLRequest, isUdacity: Bool = false, responseHandler: @escaping (_ result: [String: Any]?, _ error: String?) -> Void ) {
+    func sendRequest(request: NSMutableURLRequest, responseHandler: @escaping (_ result: [String: Any]?, _ error: String?) -> Void ) {
         
         let requesttask = theSession.dataTask(with: request as URLRequest) { (data, response, error) in
-            
             print("Got to beginning of task")
             
             guard error == nil else {
@@ -65,13 +64,7 @@ class APIClient {
             
             print("Got here after http errors")
             
-            var parsedData = data
-            
-            if isUdacity == true {
-                let range = Range(5..<data!.count)
-                let newData = data?.subdata(in: range)
-                parsedData = newData
-            }
+            let parsedData = data
             
             let (returnJSON, err) = self.receiveResponse(data: parsedData!)
             
