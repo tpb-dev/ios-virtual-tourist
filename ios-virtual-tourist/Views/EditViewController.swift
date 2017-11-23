@@ -19,7 +19,11 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     @IBOutlet weak var newCollectionRemoveButton: UIBarButtonItem!
     
+    @IBOutlet weak var deleteEditButton: UIBarButtonItem!
+    
     var annotation : MKAnnotation? = nil
+    
+    var pageCounter = 1
     
     
     var myLocationPointRect: MKMapRect? = nil
@@ -55,7 +59,6 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func loadImages() {
@@ -63,7 +66,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         print("Brucey2")
         let long = (annotation?.coordinate.longitude)!
         let lat = (annotation?.coordinate.latitude)!
-        editControllerClient.getResultsForCoordinates(longitude: long, latitude: lat, page: 1) { (response, error) -> Void in
+        editControllerClient.getResultsForCoordinates(longitude: long, latitude: lat, page: pageCounter) { (response, error) -> Void in
             if error != nil {
                 print("Bad in editviewcontroller")
             } else {
@@ -81,22 +84,16 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
             print("Not bad")
             
         }
+        pageCounter += 1
     }
     
     
     @IBAction func newCollectionRemoveClicked(_ sender: Any) {
-        if editControllerClient.isEditMode == true {
-            let indexPaths = self.editViewCollectionView!.indexPathsForSelectedItems!
-            for indexPath in indexPaths {
-                self.editViewCollectionView.performBatchUpdates({
-                    self.editViewCollectionView.deleteItems(at: [indexPath])
-                }) { (finished) in
-                    self.editViewCollectionView.reloadItems(at: self.editViewCollectionView.indexPathsForVisibleItems)
-                }
-            }
-        } else {
-            
-        }
+        let indexPaths = self.editViewCollectionView!.indexPathsForSelectedItems!
+        
+        self.editViewCollectionView.deleteItems(at: indexPaths)
+        imgURLs.removeAll()
+        loadImages()
     }
     
     @IBAction func backClicked(_ sender: Any) {
@@ -107,7 +104,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     {
         
     }
-    //UICollectionViewDelegateFlowLayout methods
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat
     {
         
@@ -118,9 +115,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         return 0;
     }
-    
-    
-    //UICollectionViewDatasource methods
+
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
         return 1
@@ -134,20 +129,19 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as UICollectionViewCell
         
-        myCell.backgroundColor = UIColor.black
+        myCell.backgroundColor = UIColor.green
         
-        //        let imageDictionary = self.images[indexPath.row] as! NSDictionary
         let imageUrlString = self.imgURLs[indexPath.row]
         let imageUrl:NSURL = NSURL(string: imageUrlString)!
         print(imageUrl)
         
         DispatchQueue.global(qos: .userInitiated).async {
             
-            let imageData:NSData = NSData(contentsOf: imageUrl as URL)!
-            let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
+            
             
             DispatchQueue.main.async {
-                
+                let imageData:NSData = NSData(contentsOf: imageUrl as URL)!
+                let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
                 let image = UIImage(data: imageData as Data)
                 imageView.image = image
                 imageView.contentMode = UIViewContentMode.scaleAspectFit
@@ -159,18 +153,22 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         return myCell
     }
     
-    func collectionView(collectionView: UICollectionView, shouldSelectItemAt indexPath: NSIndexPath) -> Bool {
-        if collectionView.indexPathsForSelectedItems?.count == 0 {
-            
-        } else {
-            
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("Got herre2")
+        if editControllerClient.isEditMode == true {
+            print("In edit ")
+            imgURLs.remove(at: indexPath.item)
+            collectionView.deleteItems(at: [indexPath])
         }
-        if let selectedItems = collectionView.indexPathsForSelectedItems {
-            if selectedItems.contains(indexPath as IndexPath) {
-                collectionView.deselectItem(at: indexPath as IndexPath, animated: true)
-                return false
-            }
-        }
-        return true
     }
+    
+    @IBAction func deleteEditClicked(_ sender: Any) {
+        editControllerClient.isEditMode = !editControllerClient.isEditMode
+        if editControllerClient.isEditMode == true {
+            deleteEditButton.title = "Edit"
+        } else {
+            deleteEditButton.title = "Delete"
+        }
+    }
+    
 }

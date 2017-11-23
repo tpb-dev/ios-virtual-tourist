@@ -15,7 +15,7 @@ class EditViewCell: UICollectionViewCell {
     @IBOutlet weak var editImageView: UIImageView!
     
 
-    
+  /*
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.layer.borderWidth = 3.0
@@ -32,4 +32,5 @@ class EditViewCell: UICollectionViewCell {
             
         }
     }
+ */
 }

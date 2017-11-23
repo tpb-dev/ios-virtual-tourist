@@ -37,7 +37,6 @@ class EditController : APIClient {
             if resp != nil {
                 if let photos = resp!["photos"] as! [String:Any]? {
                     if let photo = photos["photo"] as! [[String:Any]]?{
-                        print("Farm rice")
                         var count = 0
                         for pict in photo {
                             let pic = pict as [String:Any]

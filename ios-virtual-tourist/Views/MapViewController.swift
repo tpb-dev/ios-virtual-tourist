@@ -24,17 +24,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         mapView.delegate = self
-       // var c = PinModel(latitude:26.4, longitude:22.3)
-        //c.tryme()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("Inside viewWillAppear for mapviewcontroller")
         mapView.isHidden = false
-        //deleteButton.isHidden = true
         let pins = MapController.instance.getAllPins()!
         for pin in pins {
             addPinToMap(pin: pin)
@@ -74,19 +70,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
         isEditState = !isEditState
     }
-    
-    @objc func buttonAction() {
-        print("the dog")
-    }
-    
-    /*
-     
-     let imageView = UIImageView(image: meme.memedImage)
-     imageView.contentMode = .scaleAspectFit
-     cell.backgroundView = imageView
-     
-     */
-     
      
     func addPinToMap(pin: Pin) {
         
@@ -107,9 +90,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             view = dequeuedView
         } else {
             view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-//            view.canShowCallout = true
-//            view.calloutOffset = CGPoint(x: -5, y: 5)
-//            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         return view
     }

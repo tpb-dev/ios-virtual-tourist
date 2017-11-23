@@ -95,6 +95,12 @@
                                             <action selector="backClicked:" destination="dV5-OT-4jA" id="Lgz-gm-bQi"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="lW5-79-8Ge"/>
+                                    <barButtonItem title="Delete" id="XPl-41-b1T">
+                                        <connections>
+                                            <action selector="deleteEditClicked:" destination="dV5-OT-4jA" id="Sg6-1r-B0E"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hWW-Th-wcY">
@@ -179,6 +185,7 @@
                         <viewLayoutGuide key="safeArea" id="6j5-ej-Nki"/>
                     </view>
                     <connections>
+                        <outlet property="deleteEditButton" destination="XPl-41-b1T" id="6u3-b2-0O4"/>
                         <outlet property="editViewCollectionView" destination="Gfy-Nt-iZn" id="ZZ0-Yr-Ni3"/>
                         <outlet property="editViewMapView" destination="hiX-XP-qQZ" id="uFj-U5-cg9"/>
                         <outlet property="newCollectionRemoveButton" destination="e2t-d4-HR1" id="6zg-8R-Mo8"/>
