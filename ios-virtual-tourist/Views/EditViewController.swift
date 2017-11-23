@@ -89,10 +89,11 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     
     @IBAction func newCollectionRemoveClicked(_ sender: Any) {
-        let indexPaths = self.editViewCollectionView!.indexPathsForSelectedItems!
+        let indexPaths = self.editViewCollectionView!.index
         
-        self.editViewCollectionView.deleteItems(at: indexPaths)
+        
         imgURLs.removeAll()
+        editViewCollectionView.reloadData()
         loadImages()
     }
     
