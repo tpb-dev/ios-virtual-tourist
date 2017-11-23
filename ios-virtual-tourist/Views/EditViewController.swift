@@ -130,6 +130,8 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath as IndexPath) as UICollectionViewCell
         
+        
+        
         myCell.backgroundColor = UIColor.green
         
         let imageUrlString = self.imgURLs[indexPath.row]
@@ -146,6 +148,12 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
                 let image = UIImage(data: imageData as Data)
                 imageView.image = image
                 imageView.contentMode = UIViewContentMode.scaleAspectFit
+                
+                let theSubviews: Array = (myCell.subviews)
+                for view in theSubviews
+                {
+                    view.removeFromSuperview()
+                }
                 
                 myCell.addSubview(imageView)
             }
