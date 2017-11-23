@@ -57,7 +57,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 button = UIButton(frame: CGRect(x: 0, y: screenHeight - 44, width: screenWidth, height: 50))
                 button.backgroundColor = .green
                 button.setTitle("Tap pins to delete", for: .normal)
-                button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
             } else {
                 button.isHidden = false
             }
@@ -70,7 +69,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
         isEditState = !isEditState
     }
-     
+    
     func addPinToMap(pin: Pin) {
         
         let annotation = MKPointAnnotation()
