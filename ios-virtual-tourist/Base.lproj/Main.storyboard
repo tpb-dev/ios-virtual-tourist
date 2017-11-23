@@ -106,7 +106,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="jwy-sJ-icY"/>
                                     <barButtonItem title="New Collection" id="e2t-d4-HR1">
                                         <connections>
-                                            <action selector="newCollectionClicked:" destination="dV5-OT-4jA" id="87k-3H-cDj"/>
+                                            <action selector="newCollectionRemoveClicked:" destination="dV5-OT-4jA" id="Wgj-Zr-Bb8"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="UkE-8V-AJb"/>
@@ -115,22 +115,22 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Gfy-Nt-iZn">
                                 <rect key="frame" x="0.0" y="194" width="375" height="429"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cs0-5H-PnU">
-                                    <size key="itemSize" width="50" height="50"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="cs0-5H-PnU">
+                                    <size key="itemSize" width="105" height="105"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="EditViewCell" reuseIdentifier="EditViewCell" id="LFc-AF-4fb" customClass="EditViewCell" customModule="ios_virtual_tourist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="105" height="105"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="105" height="105"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oPO-1u-2rU">
-                                                    <rect key="frame" x="8" y="8" width="34" height="34"/>
+                                                    <rect key="frame" x="8" y="8" width="89" height="89"/>
                                                 </imageView>
                                             </subviews>
                                         </view>
@@ -140,11 +140,16 @@
                                             <constraint firstAttribute="trailingMargin" secondItem="oPO-1u-2rU" secondAttribute="trailing" id="SeL-RC-J4r"/>
                                             <constraint firstItem="oPO-1u-2rU" firstAttribute="top" secondItem="LFc-AF-4fb" secondAttribute="topMargin" id="bPW-sU-RbC"/>
                                         </constraints>
+                                        <size key="customSize" width="105" height="105"/>
                                         <connections>
                                             <outlet property="editImageView" destination="oPO-1u-2rU" id="CBf-d6-1Xr"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="dV5-OT-4jA" id="eYB-KC-Q10"/>
+                                    <outlet property="delegate" destination="dV5-OT-4jA" id="KEk-pG-mOO"/>
+                                </connections>
                             </collectionView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="hiX-XP-qQZ">
                                 <rect key="frame" x="0.0" y="64" width="375" height="130"/>
@@ -174,7 +179,9 @@
                         <viewLayoutGuide key="safeArea" id="6j5-ej-Nki"/>
                     </view>
                     <connections>
+                        <outlet property="editViewCollectionView" destination="Gfy-Nt-iZn" id="ZZ0-Yr-Ni3"/>
                         <outlet property="editViewMapView" destination="hiX-XP-qQZ" id="uFj-U5-cg9"/>
+                        <outlet property="newCollectionRemoveButton" destination="e2t-d4-HR1" id="6zg-8R-Mo8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nI1-K4-sBt" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -15,7 +15,9 @@ class EditController : APIClient {
     
     var picsForCoorindatesURL : String = "https://api.flickr.com/services/rest/"
     
-    func getResultsForCoordinates(longitude: Double, latitude: Double, page: Int) -> [String]? {
+    var isEditMode : Bool = false
+    
+    func getResultsForCoordinates(longitude: Double, latitude: Double, page: Int, responseHandler: @escaping (_ imgURLS: [String]?, _ error: String?) -> Void) {
         let params: [String: String] = ["method" : "flickr.photos.search",
                                         "api_key" : key,
                                         "per_page": "21",
@@ -23,7 +25,7 @@ class EditController : APIClient {
                                         "lat" : String(latitude),
                                         "lon" : String(longitude),
                                         "page" : String(page),
-                                        "nojsoncallback": "!"
+                                        "nojsoncallback": "1"
                                         ]
         
         var imgURLs = [String]()
@@ -36,10 +38,25 @@ class EditController : APIClient {
                 if let photos = resp!["photos"] as! [String:Any]? {
                     if let photo = photos["photo"] as! [[String:Any]]?{
                         print("Farm rice")
-                        for pic in photo {
-                            let url = self.makeURL(farm: String(describing: pic["farm"]), server: String(describing: pic["server"]), id: String(describing: pic["id"]), secret: String(describing: pic["secret"]))
-                            imgURLs.append(url)
+                        var count = 0
+                        for pict in photo {
+                            let pic = pict as [String:Any]
+                            print("count = \(count)")
+                            count += 1
+
+                            let farmInt = pic["farm"] as! Int
+                            let farm : String! = String(describing: farmInt)
+                            let serverInt = pic["server"] as! String
+                            let server : String! = String(describing: serverInt)
+                            let idInt = pic["id"] as! String
+                            let id : String! = String(describing: idInt)
+                            let secretInt = pic["secret"] as! String
+                            let secret : String! = String(describing: secretInt)
+
+                            let url = self.makeURL(farm: farm, server:server, id: id, secret: secret)
+                            imgURLs.append(url!)
                         }
+                        responseHandler(imgURLs, nil)
                     } else {
                         print("No photos")
                     }
@@ -49,45 +66,11 @@ class EditController : APIClient {
                 print("bad")
             }
         }
-        return imgURLs
     }
     
-    /*
-    func searchPlaces(placeID: String!) {
-        let params: [String: String] = ["method" : "flickr.photos.search",
-                                        "api_key" : key,
-                                        "per_page": "21",
-                                        "format" : "json",
-                                        "nojsoncallback" : "1",
-                                        "lat" : String(latitude),
-                                        "lon" : String(longitude)
-        ]
-     
-     if let places = resp!["places"] as! [String: Any]?{
-     print("The name of the airport is")
-     if let place = places["place"] as! [[String:Any]]? {
-     print("The name of the airport is")
-     if place.count > 0 {
-     print("Yes, place id = \(place[0]["place_id"] ?? "NONE")")
-     placeID = place[0]["place_id"] as! String
-     } else {
-     print("That airport is not in the airports dictionary.")
-     placeID = ""
-     }
-     } else {
-     print("That airport is not in the airports dictionary.")
-     }
-     } else {
-     print("No places")
-     }
-     
-     
-     
-     
-    } */
-    
-    func makeURL(farm: String, server: String, id: String, secret: String) -> String {
-        return "https://farm" + farm + ".staticflickr.com/" + server + "/" + id + "_" + secret + ".jpg"
+    func makeURL(farm: String, server: String, id: String, secret: String) -> String! {
+        let f : String = "\(farm)"
+        return "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret).jpg"
     }
     
 }

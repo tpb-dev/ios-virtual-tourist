@@ -13,4 +13,23 @@ import UIKit
 class EditViewCell: UICollectionViewCell {
     
     @IBOutlet weak var editImageView: UIImageView!
+    
+
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.layer.borderWidth = 3.0
+        self.layer.borderColor = UIColor.white.cgColor
+    }
+    
+    override var isSelected: Bool {
+        didSet {
+            if self.layer.borderColor == UIColor.white.cgColor {
+                self.layer.borderColor = UIColor.blue.cgColor
+            } else {
+                self.layer.borderColor = UIColor.white.cgColor
+            }
+            
+        }
+    }
 }
