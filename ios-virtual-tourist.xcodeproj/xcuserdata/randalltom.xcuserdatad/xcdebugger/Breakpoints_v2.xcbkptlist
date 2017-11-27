@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ios-virtual-tourist/Controllers/MapController.swift"
-            timestampString = "533015923.156636"
+            timestampString = "533513642.221735"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
             landmarkName = "deletePin(annotation:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ios-virtual-tourist/Controllers/MapController.swift"
-            timestampString = "533015923.157043"
+            timestampString = "533513642.222322"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "deletePin(annotation:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ios-virtual-tourist/Controllers/MapController.swift"
-            timestampString = "533015923.157269"
+            timestampString = "533513642.222458"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
             landmarkName = "deletePin(annotation:)"
             landmarkType = "7">
          </BreakpointContent>

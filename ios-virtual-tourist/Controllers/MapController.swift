@@ -16,15 +16,49 @@ class MapController {
     static let instance = MapController()
     
     var thePin : MKAnnotation?
+    var currentPin : Pin?
     
     init() {
         thePin = nil
+        currentPin = nil
     }
     
     
     
-    func storePinInstance(longitude: Double, latitude: Double) -> Pin? {
+    func isPinAlreadyThere(longitude: Double, latitude: Double) -> Pin? {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return nil
+        }
         
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        
+        let pred = NSPredicate(format: "%K == %@ AND %K == %@", argumentArray:["longitude", longitude, "latitude", latitude])
+        
+
+        
+        let pinsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        pinsFetch.predicate = pred
+        
+        do {
+            if let result = try? managedContext.fetch(pinsFetch) {
+                for object in result {
+                    
+                    return object as! Pin
+                }
+            }
+            return nil
+        } catch {
+            fatalError("Failed to fetch employees: \(error)")
+        }
+        return nil
+    }
+        
+        
+        
+    func storePinInstance(longitude: Double, latitude: Double)-> Pin? {
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
                 return nil
@@ -45,7 +79,6 @@ class MapController {
         
         do {
             try managedContext.save()
-            appDelegate.pins.append(pin)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
@@ -73,6 +106,35 @@ class MapController {
         }
     }
     
+    func deleteImgs(badPin: Pin!) {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let pred = NSPredicate(format: "parentPin == %@" , badPin)
+
+        let pinsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CollectionImage")
+        pinsFetch.predicate = pred
+        
+        do {
+            if let result = try? managedContext.fetch(pinsFetch) {
+                for object in result {
+                    
+                    managedContext.delete(object as! NSManagedObject)
+                }
+            }
+            try managedContext.save()
+        } catch {
+            fatalError("Failed to fetch employees: \(error)")
+        }
+        
+        
+    }
+    
     func deletePin(annotation: MKAnnotation) -> Bool {
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
@@ -82,6 +144,14 @@ class MapController {
         let managedContext =
             appDelegate.persistentContainer.viewContext
         
+        let badPin: Pin?
+        
+        badPin = MapController.instance.currentPin
+        
+        if badPin != nil {
+            deleteImgs(badPin: badPin)
+        }
+    
         let pred = NSPredicate(format: "%K == %@ AND %K == %@", argumentArray:["longitude", annotation.coordinate.longitude, "latitude", annotation.coordinate.latitude])
 
         let pinsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
@@ -90,7 +160,7 @@ class MapController {
         do {
             if let result = try? managedContext.fetch(pinsFetch) {
                 for object in result {
-                    //print((object as! Pin).latitude)
+
                     managedContext.delete(object as! NSManagedObject)
                 }
             }
@@ -100,5 +170,8 @@ class MapController {
             fatalError("Failed to fetch employees: \(error)")
             return false
         }
+    
     }
+    
+    
 }

@@ -98,11 +98,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         print("Brucey")
         if isEditState == true {
+            print("Brucey2222")
             let annotation = view.annotation as? MKPointAnnotation
             mapView.removeAnnotation(annotation!)
             MapController.instance.deletePin(annotation: annotation!)
         } else {
-            MapController.instance.thePin = view.annotation
+            print("Brucey3333")
+            MapController.instance.currentPin = MapController.instance.isPinAlreadyThere(longitude: (view.annotation?.coordinate.longitude)!, latitude: (view.annotation?.coordinate.latitude)!)
+            MapController.instance.thePin = view.annotation!
             let storyboard = self.storyboard
             let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController")
             
@@ -116,8 +119,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let touchLocation = sender.location(in: mapView)
         let locationCoordinate = mapView.convert(touchLocation, toCoordinateFrom: mapView)
         print("Tapped at lat: \(locationCoordinate.latitude) long: \(locationCoordinate.longitude)")
-        let pin = MapController.instance.storePinInstance(longitude: locationCoordinate.longitude, latitude: locationCoordinate.latitude)
-        addPinToMap(pin: pin!)
+        var pin = MapController.instance.isPinAlreadyThere(longitude: locationCoordinate.longitude, latitude: locationCoordinate.latitude)
+        
+        if pin != nil {
+            print("pin is not nil")
+            MapController.instance.currentPin = pin
+        } else {
+            print("pin is nil")
+
+            pin = MapController.instance.storePinInstance(longitude: locationCoordinate.longitude, latitude: locationCoordinate.latitude)
+            MapController.instance.currentPin = pin
+            addPinToMap(pin: pin!)
+        }
     }
 }
 

@@ -7,8 +7,16 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 class EditController : APIClient {
+    
+    static let instance = EditController()
+
+    
+    override init() {
+    }
     
     var key: String = "2eed657f5a7b9a7afc6930f7c89ef7ef"
     var secret: String = "0cd2f2adfbe1c8e3"
@@ -32,7 +40,7 @@ class EditController : APIClient {
         
         let request = self.makeRequest(method: APIClient.Methods(rawValue: "GET")!, url: picsForCoorindatesURL, requestBody: nil, params: params)
         
-        print(request.url)
+        //print(request.url)
         self.sendRequest(request: request){ (resp, err) -> Void in
             if resp != nil {
                 if let photos = resp!["photos"] as! [String:Any]? {
@@ -90,4 +98,64 @@ class EditController : APIClient {
         task.resume()
     }
     
+    func storeImage(_ imageData: NSData?, imgURL: String?){
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let entity =
+            NSEntityDescription.entity(forEntityName: "CollectionImage",
+                                       in: managedContext)!
+        
+        let collImg = CollectionImage(entity: entity,
+                      insertInto: managedContext)
+        
+        collImg.setValue(imageData, forKeyPath: "image")
+        collImg.setValue(imgURL, forKeyPath: "imgURL")
+        collImg.setValue(MapController.instance.currentPin, forKeyPath: "parentPin" )
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        
+    }
+    
+    func getLocalImages(pin: Pin!) -> [NSData] {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return [NSData]()
+        }
+        
+        var res: [NSData] = [NSData]()
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let pred = NSPredicate(format: "parentPin == %@", pin)
+        
+        let pinsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CollectionImage")
+        pinsFetch.predicate = pred
+        
+        do {
+            if let result = try? managedContext.fetch(pinsFetch) {
+                for object in result {
+                    
+                    res.append(object as! NSData)
+                }
+            }
+            try managedContext.save()
+            return res
+        } catch {
+            fatalError("Failed to fetch employees: \(error)")
+            return res
+        }
+        
+    }
 }
