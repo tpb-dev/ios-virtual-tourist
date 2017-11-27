@@ -138,24 +138,24 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         let imageUrl:NSURL = NSURL(string: imageUrlString)!
         print(imageUrl)
         
-        DispatchQueue.global(qos: .userInitiated).async {
-            
-            
-            
-            DispatchQueue.main.async {
-                let imageData:NSData = NSData(contentsOf: imageUrl as URL)!
-                let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
-                let image = UIImage(data: imageData as Data)
-                imageView.image = image
-                imageView.contentMode = UIViewContentMode.scaleAspectFit
-                
-                let theSubviews: Array = (myCell.subviews)
-                for view in theSubviews
-                {
-                    view.removeFromSuperview()
+        editControllerClient.downloadImage(imagePath: imageUrlString) { (response, error) -> Void in
+
+            DispatchQueue.global(qos: .userInitiated).async {
+                DispatchQueue.main.async {
+                    let imageData:NSData = response!
+                    let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
+                    let image = UIImage(data: imageData as Data)
+                    imageView.image = image
+                    imageView.contentMode = UIViewContentMode.scaleAspectFit
+                    
+                    let theSubviews: Array = (myCell.subviews)
+                    for view in theSubviews
+                    {
+                        view.removeFromSuperview()
+                    }
+                    
+                    myCell.addSubview(imageView)
                 }
-                
-                myCell.addSubview(imageView)
             }
         }
         
