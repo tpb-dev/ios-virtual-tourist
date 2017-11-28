@@ -121,19 +121,20 @@ class EditController : APIClient {
         
         do {
             try managedContext.save()
+            print("saved")
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
         
     }
     
-    func getLocalImages(pin: Pin!) -> [NSData] {
+    func getLocalImages(pin: Pin!) -> [CollectionImage] {
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
-                return [NSData]()
+                return [CollectionImage]()
         }
         
-        var res: [NSData] = [NSData]()
+        var res: [CollectionImage] = [CollectionImage]()
         
         let managedContext =
             appDelegate.persistentContainer.viewContext
@@ -147,7 +148,7 @@ class EditController : APIClient {
             if let result = try? managedContext.fetch(pinsFetch) {
                 for object in result {
                     
-                    res.append(object as! NSData)
+                    res.append(object as! CollectionImage)
                 }
             }
             try managedContext.save()

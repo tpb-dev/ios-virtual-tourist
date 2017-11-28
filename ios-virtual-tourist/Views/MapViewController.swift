@@ -35,6 +35,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         for pin in pins {
             addPinToMap(pin: pin)
         }
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        print(paths[0])
     }
     
     override func viewWillDisappear(_ animated: Bool) {

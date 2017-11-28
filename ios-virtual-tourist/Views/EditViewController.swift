@@ -31,6 +31,8 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     var imgURLs = [String]()
     
+    var imgsLocal: [CollectionImage]? = nil
+    
     let editControllerClient = EditController()
     
     override func viewDidLoad() {
@@ -69,9 +71,9 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         let lat = (annotation?.coordinate.latitude)!
         //Here for check images in Local
 
-        let imgsLocal: [NSData] = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
-        print("imgslocal.count=\(imgsLocal.count)")
-        if imgsLocal.count <= 0 {
+        let colImgsLocal: [CollectionImage] = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
+        print("imgslocal.count=\(colImgsLocal.count)")
+        if colImgsLocal.count <= 0 {
         
             editControllerClient.getResultsForCoordinates(longitude: long, latitude: lat, page: pageCounter) { (response, error) -> Void in
                 if error != nil {
@@ -79,6 +81,9 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
                 } else {
                     print("Count = \(response?.count ?? 0)")
                     self.imgURLs = response!
+                    for url in self.imgURLs {
+                        self.getImgs(imageUrlString: url)
+                    }
                     DispatchQueue.main.async {
                         self.editViewCollectionView.reloadData()
                     }
@@ -94,6 +99,13 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
             pageCounter += 1
         }
         
+    }
+    
+    func getImgs(imageUrlString: String) {
+        editControllerClient.downloadImage(imagePath: imageUrlString) { (response, error) -> Void in
+            
+                    EditController.instance.storeImage(response, imgURL: imageUrlString)
+        }
     }
     
     
@@ -134,7 +146,8 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return imgURLs.count
+        return imgsLocal!.count
+    
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -144,14 +157,15 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         myCell.backgroundColor = UIColor.green
         
-        var imgsLocal: [NSData] = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
+        imgsLocal = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
                    
-        if imgsLocal.count > 0 {
-            
+        if imgsLocal!.count > 0 {
+            print("imgslocal.count \(imgsLocal!.count)")
             DispatchQueue.global(qos: .userInitiated).async {
                 DispatchQueue.main.async {
                     let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
-                    let image = UIImage(data: imgsLocal[indexPath.row] as Data)
+                    let image = UIImage(data: self.imgsLocal![indexPath.row].image! as Data)
+                    
                     imageView.image = image
                     imageView.contentMode = UIViewContentMode.scaleAspectFit
                     
@@ -170,38 +184,20 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         } else {
             let imageUrlString = self.imgURLs[indexPath.row]
             let imageUrl:NSURL = NSURL(string: imageUrlString)!
-            print(imageUrl)
+//            print(imageUrl)
+            print("imgslocal.count \(imgsLocal?.count)")
             
-            editControllerClient.downloadImage(imagePath: imageUrlString) { (response, error) -> Void in
-                
-                DispatchQueue.global(qos: .userInitiated).async {
-                    DispatchQueue.main.async {
-                        let imageData:NSData = response!
-                        let imageView = UIImageView(frame: CGRect(x:0, y:0, width:myCell.frame.size.width, height:myCell.frame.size.height))
-                        let image = UIImage(data: imageData as Data)
-                        imageView.image = image
-                        imageView.contentMode = UIViewContentMode.scaleAspectFit
-                        
-                        let theSubviews: Array = (myCell.subviews)
-                        for view in theSubviews
-                        {
-                            view.removeFromSuperview()
-                        }
-                        
-                        myCell.addSubview(imageView)
-                    }
-                }
-            }
-            
-            return myCell
         }
+            
+        return myCell
+        
         
         
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Got herre2")
-        if editControllerClient.isEditMode == true {
+        if EditController.instance.isEditMode == true {
             print("In edit ")
             imgURLs.remove(at: indexPath.item)
             collectionView.deleteItems(at: [indexPath])
