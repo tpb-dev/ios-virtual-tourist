@@ -84,9 +84,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
                     for url in self.imgURLs {
                         self.getImgs(imageUrlString: url)
                     }
-                    DispatchQueue.main.async {
-                        self.editViewCollectionView.reloadData()
-                    }
+                   
                 }
             }
             
@@ -98,7 +96,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             pageCounter += 1
         }
-        
+        handler
     }
     
     func getImgs(imageUrlString: String) {
@@ -106,9 +104,11 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
             DispatchQueue.global(qos: .userInitiated).async {
                 DispatchQueue.main.async {
                     EditController.instance.storeImage(response, imgURL: imageUrlString)
+                    
                 }
             }
         }
+        
     }
     
     
@@ -188,7 +188,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
             let imageUrlString = self.imgURLs[indexPath.row]
             let imageUrl:NSURL = NSURL(string: imageUrlString)!
 //            print(imageUrl)
-            print("imgslocal.count \(imgsLocal?.count)")
+            print("baddddd")
             
         }
             
