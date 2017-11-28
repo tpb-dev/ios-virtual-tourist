@@ -76,7 +76,6 @@ class EditController : APIClient {
     }
     
     func makeURL(farm: String, server: String, id: String, secret: String) -> String! {
-        let f : String = "\(farm)"
         return "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret).jpg"
     }
     
@@ -159,4 +158,34 @@ class EditController : APIClient {
         }
         
     }
+    
+    func deleteImage(_ imgURL: String){
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        let pred = NSPredicate(format: "imgURL == %@", imgURL)
+        
+        let pinsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CollectionImage")
+        pinsFetch.predicate = pred
+        
+        do {
+            if let result = try? managedContext.fetch(pinsFetch) {
+                for object in result {
+                    
+                    managedContext.delete(object as! NSManagedObject)
+                }
+            }
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not delete. \(error), \(error.userInfo)")
+        }
+        
+    }
+    
 }

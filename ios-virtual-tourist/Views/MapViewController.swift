@@ -106,12 +106,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             MapController.instance.deletePin(annotation: annotation!)
         } else {
             print("Brucey3333")
-            MapController.instance.currentPin = MapController.instance.isPinAlreadyThere(longitude: (view.annotation?.coordinate.longitude)!, latitude: (view.annotation?.coordinate.latitude)!)
-            MapController.instance.thePin = view.annotation!
-            let storyboard = self.storyboard
-            let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController")
+            let pen = MapController.instance.isPinAlreadyThere(longitude: (view.annotation?.coordinate.longitude)!, latitude: (view.annotation?.coordinate.latitude)!)
+            if pen != nil {
+                MapController.instance.currentPin = pen
+                MapController.instance.thePin = view.annotation!
+                let storyboard = self.storyboard
+                let editViewController = storyboard?.instantiateViewController(withIdentifier: "EditViewController")
+                
+                self.present(editViewController!, animated: true, completion: nil)
+            }
             
-            self.present(editViewController!, animated: true, completion: nil)
+            print("didSelect but pin doesn't exist")
+
             
         }
     }

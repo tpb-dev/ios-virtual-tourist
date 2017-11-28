@@ -31,14 +31,13 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     var imgURLs = [String]()
     
-    var imgsLocal: [CollectionImage]? = nil
-    
-    let editControllerClient = EditController()
+    var imgsLocal: [CollectionImage]? = [CollectionImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         editViewMapView.delegate = self
+        //editViewCollectionView.delegate = self
         title = "Collection View"
 
     }
@@ -71,40 +70,48 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         let lat = (annotation?.coordinate.latitude)!
         //Here for check images in Local
 
-        let colImgsLocal: [CollectionImage] = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
-        print("imgslocal.count=\(colImgsLocal.count)")
-        if colImgsLocal.count <= 0 {
+        imgsLocal = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
+        print("imgslocal.count=\(imgsLocal?.count)")
+        if imgsLocal!.count <= 0 {
         
-            editControllerClient.getResultsForCoordinates(longitude: long, latitude: lat, page: pageCounter) { (response, error) -> Void in
+            EditController.instance.getResultsForCoordinates(longitude: long, latitude: lat, page: pageCounter) { (response, error) -> Void in
                 if error != nil {
                     print("Bad in editviewcontroller")
                 } else {
                     print("Count = \(response?.count ?? 0)")
                     self.imgURLs = response!
+                    let taskGroup = DispatchGroup()
                     for url in self.imgURLs {
-                        self.getImgs(imageUrlString: url)
+                        taskGroup.enter()
+                        self.getImgs(imageUrlString: url) { (resp, err) -> Void in
+                            defer {
+                                taskGroup.leave()
+                            }
+                        }
                     }
-                   
-                }
-            }
-            
-            if imgURLs.count == 0 {
-                print("No gppd")
-            } else {
-                print("Not bad")
+                    taskGroup.notify(queue: DispatchQueue.main, work: DispatchWorkItem(block: {
+                        print("calling reload")
+                        self.imgsLocal = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
+                        self.editViewCollectionView.reloadData()
+                    }))
+                    
                 
+                }
+
+                self.pageCounter += 1
             }
-            pageCounter += 1
+        } else {
+            print("calling reload")
+            self.editViewCollectionView.reloadData()
         }
-        handler
     }
     
-    func getImgs(imageUrlString: String) {
-        editControllerClient.downloadImage(imagePath: imageUrlString) { (response, error) -> Void in
+    func getImgs(imageUrlString: String, responseHandler: @escaping (_ result: String?, _ error: String?) -> Void ) {
+        EditController.instance.downloadImage(imagePath: imageUrlString) { (response, error) -> Void in
             DispatchQueue.global(qos: .userInitiated).async {
                 DispatchQueue.main.async {
                     EditController.instance.storeImage(response, imgURL: imageUrlString)
-                    
+                    responseHandler(".", "")
                 }
             }
         }
@@ -148,8 +155,8 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return imgsLocal == nil ? 0 : imgsLocal!.count
+        print(imgsLocal!.count)
+        return imgsLocal!.count
     
     }
     
@@ -160,8 +167,8 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         myCell.backgroundColor = UIColor.green
         
-        imgsLocal = EditController.instance.getLocalImages(pin: MapController.instance.currentPin)
-                   
+        
+        print("IS Bruce called?")
         if imgsLocal!.count > 0 {
             print("imgslocal.count \(imgsLocal!.count)")
             DispatchQueue.global(qos: .userInitiated).async {
@@ -188,7 +195,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
             let imageUrlString = self.imgURLs[indexPath.row]
             let imageUrl:NSURL = NSURL(string: imageUrlString)!
 //            print(imageUrl)
-            print("baddddd")
+            print("baddddd no bruce call")
             
         }
             
@@ -202,20 +209,19 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
         print("Got herre2")
         if EditController.instance.isEditMode == true {
             print("In edit ")
-            imgURLs.remove(at: indexPath.item)
+            let url = imgsLocal![indexPath.item].imgURL!
+            imgsLocal?.remove(at: indexPath.item)
+            EditController.instance.deleteImage(url)
             collectionView.deleteItems(at: [indexPath])
         }
     }
     
     @IBAction func deleteEditClicked(_ sender: Any) {
-        editControllerClient.isEditMode = !editControllerClient.isEditMode
-        if editControllerClient.isEditMode == true {
+        EditController.instance.isEditMode = !EditController.instance.isEditMode
+        if EditController.instance.isEditMode == true {
             deleteEditButton.title = "Edit"
         } else {
             deleteEditButton.title = "Delete"
         }
     }
-
-    
-    
 }
