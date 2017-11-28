@@ -103,8 +103,11 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func getImgs(imageUrlString: String) {
         editControllerClient.downloadImage(imagePath: imageUrlString) { (response, error) -> Void in
-            
+            DispatchQueue.global(qos: .userInitiated).async {
+                DispatchQueue.main.async {
                     EditController.instance.storeImage(response, imgURL: imageUrlString)
+                }
+            }
         }
     }
     
@@ -146,7 +149,7 @@ class EditViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return imgsLocal!.count
+        return imgsLocal == nil ? 0 : imgsLocal!.count
     
     }
     
